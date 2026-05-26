@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function initContactInfo() {
-    const p = ['44', '7707', '028', '037'];
+    const p = ['267', '721', '38', '721'];
     const num = p.join('');
     const formatted = '+' + p[0] + ' ' + p[1] + ' ' + p[2] + ' ' + p[3];
 

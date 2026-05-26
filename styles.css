@@ -312,6 +312,20 @@ body {
         inset 0 0 0 17px rgba(139, 115, 85, 0.28);
 }
 
+.map-section .decorative-frame::before,
+.map-section .decorative-frame::after {
+    border-color: rgba(201, 167, 125, 0.55);
+}
+
+.map-section .decorative-frame::before {
+    box-shadow:
+        inset 0 0 0 1px rgba(201, 167, 125, 0.6),
+        inset 0 0 0 8px transparent,
+        inset 0 0 0 9px rgba(201, 167, 125, 0.35),
+        inset 0 0 0 16px transparent,
+        inset 0 0 0 17px rgba(201, 167, 125, 0.28);
+}
+
 .rsvp-section .decorative-frame::before,
 .rsvp-section .decorative-frame::after {
     border-color: rgba(212, 165, 116, 0.6);
@@ -325,6 +339,7 @@ body {
         inset 0 0 0 16px transparent,
         inset 0 0 0 17px rgba(212, 165, 116, 0.32);
 }
+
 
 /* ===== Date Section ===== */
 .date-section {
