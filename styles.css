@@ -438,6 +438,19 @@ body {
     line-height: 1.8;
 }
 
+/* ===== Map Section ===== */
+.map-section {
+    overflow: hidden;
+}
+
+.map-section iframe {
+    display: block;
+    width: min(100%, 1000px);
+    max-width: 100%;
+    height: clamp(280px, 56vw, 450px);
+    border: 0;
+}
+
 /* ===== Story Section ===== */
 .story-section {
     background-color: var(--color-warm-white);
