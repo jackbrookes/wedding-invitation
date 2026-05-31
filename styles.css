@@ -4,15 +4,19 @@
     --color-cream: #faf6f0;
     --color-warm-white: #f5efe6;
     --color-blush: #e8d4c4;
+    --color-peach: #f3dfc8;
+    --color-apricot: #d8ae86;
     --color-dusty-rose: #d4a574;
     --color-terracotta: #c9a77d;
     --color-warm-brown: #8b7355;
     --color-deep-brown: #5c4a3a;
+    --color-rosewood: #a5644c;
     --color-text: #4a3f35;
     --color-text-light: #7a6b5a;
 
     /* Typography */
-    --font-serif: 'Cormorant Garamond', Georgia, serif;
+    --font-serif: 'Playfair Display', Georgia, serif;
+    --font-display: 'Playfair Display', Georgia, serif;
     --font-sans: 'Montserrat', Arial, sans-serif;
 
     /* Spacing */
@@ -32,7 +36,10 @@ html {
 
 body {
     font-family: var(--font-sans);
-    background-color: var(--color-cream);
+    background:
+        radial-gradient(circle at 10% 0%, rgba(232, 212, 196, 0.35), transparent 40%),
+        radial-gradient(circle at 100% 30%, rgba(243, 223, 200, 0.3), transparent 45%),
+        var(--color-cream);
     color: var(--color-text);
     line-height: 1.6;
     overflow-x: hidden;
@@ -55,13 +62,45 @@ body {
     position: relative;
 }
 
+body>section.section {
+    background-color: var(--section-background);
+}
+
+body>section.section:nth-of-type(even) {
+    --section-background: #6c4f39;
+    --color-text: #f3e6d6;
+    --color-text-light: #e8d6c1;
+    --color-deep-brown: #f4e7d7;
+    --color-warm-brown: #ebd0ad;
+    --color-dusty-rose: #e4bf95;
+    --color-rosewood: #f0caa2;
+    --section-frame-border: rgba(244, 215, 182, 0.55);
+    --section-frame-inner: rgba(244, 215, 182, 0.6);
+    --section-frame-accent: rgba(244, 215, 182, 0.36);
+    --section-frame-outer: rgba(244, 215, 182, 0.28);
+}
+
+body>section.section:nth-of-type(odd) {
+    --section-background: #fbf2e8;
+    --color-text: #4a3f35;
+    --color-text-light: #7a6b5a;
+    --color-deep-brown: #5c4a3a;
+    --color-warm-brown: #8b7355;
+    --color-dusty-rose: #d4a574;
+    --color-rosewood: #a5644c;
+    --section-frame-border: rgba(216, 174, 134, 0.58);
+    --section-frame-inner: rgba(216, 174, 134, 0.62);
+    --section-frame-accent: rgba(216, 174, 134, 0.38);
+    --section-frame-outer: rgba(216, 174, 134, 0.3);
+}
+
 .section-label {
     font-family: var(--font-sans);
     font-size: 0.75rem;
     font-weight: 500;
     letter-spacing: 3px;
     text-transform: uppercase;
-    color: var(--color-dusty-rose);
+    color: var(--color-rosewood);
     margin-bottom: 15px;
     text-align: center;
 }
@@ -97,14 +136,11 @@ body {
 
 .hero-overlay {
     position: absolute;
-    top: 0;
+    font-size: 1rem;
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(to bottom,
-            rgba(250, 246, 240, 0.3) 0%,
-            rgba(250, 246, 240, 0.5) 50%,
-            rgba(250, 246, 240, 0.8) 100%);
+    background: transparent;
     z-index: 1;
 }
 
@@ -149,7 +185,7 @@ body {
 .hero-title .ampersand {
     display: block;
     font-style: italic;
-    font-size: 0.6em;
+    font-size: 0.8em;
     color: var(--color-dusty-rose);
     margin: 10px 0;
 }
@@ -231,24 +267,24 @@ body {
     left: 0;
     right: 0;
     bottom: 0;
-    border: 1px solid var(--color-dusty-rose);
+    border: 1px solid var(--section-frame-border, var(--color-dusty-rose));
     border-radius: 4px;
     opacity: 0.6;
 }
 
 .decorative-frame::before {
     box-shadow:
-        inset 0 0 0 1px var(--color-dusty-rose),
+        inset 0 0 0 1px var(--section-frame-inner, var(--color-dusty-rose)),
         inset 0 0 0 8px transparent,
-        inset 0 0 0 9px rgba(212, 165, 116, 0.4),
+        inset 0 0 0 9px var(--section-frame-accent, rgba(212, 165, 116, 0.4)),
         inset 0 0 0 16px transparent,
-        inset 0 0 0 17px rgba(212, 165, 116, 0.3);
+        inset 0 0 0 17px var(--section-frame-outer, rgba(212, 165, 116, 0.3));
 }
 
 .decorative-frame::after {
     margin: 8px;
-    border-color: rgba(212, 165, 116, 0.5);
-    box-shadow: inset 0 0 0 1px rgba(212, 165, 116, 0.3);
+    border-color: var(--section-frame-accent, rgba(212, 165, 116, 0.5));
+    box-shadow: inset 0 0 0 1px var(--section-frame-outer, rgba(212, 165, 116, 0.3));
 }
 
 @media (max-width: 768px) {
@@ -273,9 +309,9 @@ body {
 
     .decorative-frame::before {
         box-shadow:
-            inset 0 0 0 1px var(--color-dusty-rose),
+            inset 0 0 0 1px var(--section-frame-inner, var(--color-dusty-rose)),
             inset 0 0 0 6px transparent,
-            inset 0 0 0 7px rgba(212, 165, 116, 0.4);
+            inset 0 0 0 7px var(--section-frame-accent, rgba(212, 165, 116, 0.4));
     }
 
     .decorative-frame::after {
@@ -283,123 +319,75 @@ body {
     }
 }
 
-/* Subtle frame color variations per section */
-.date-section .decorative-frame::before,
-.date-section .decorative-frame::after {
-    border-color: rgba(201, 167, 125, 0.55);
-}
-
-.date-section .decorative-frame::before {
-    box-shadow:
-        inset 0 0 0 1px rgba(201, 167, 125, 0.6),
-        inset 0 0 0 8px transparent,
-        inset 0 0 0 9px rgba(201, 167, 125, 0.35),
-        inset 0 0 0 16px transparent,
-        inset 0 0 0 17px rgba(201, 167, 125, 0.28);
-}
-
-.location-section .decorative-frame::before,
-.location-section .decorative-frame::after {
-    border-color: rgba(139, 115, 85, 0.55);
-}
-
-.location-section .decorative-frame::before {
-    box-shadow:
-        inset 0 0 0 1px rgba(139, 115, 85, 0.6),
-        inset 0 0 0 8px transparent,
-        inset 0 0 0 9px rgba(139, 115, 85, 0.35),
-        inset 0 0 0 16px transparent,
-        inset 0 0 0 17px rgba(139, 115, 85, 0.28);
-}
-
-.map-section .decorative-frame::before,
-.map-section .decorative-frame::after {
-    border-color: rgba(201, 167, 125, 0.55);
-}
-
-.map-section .decorative-frame::before {
-    box-shadow:
-        inset 0 0 0 1px rgba(201, 167, 125, 0.6),
-        inset 0 0 0 8px transparent,
-        inset 0 0 0 9px rgba(201, 167, 125, 0.35),
-        inset 0 0 0 16px transparent,
-        inset 0 0 0 17px rgba(201, 167, 125, 0.28);
-}
-
-.rsvp-section .decorative-frame::before,
-.rsvp-section .decorative-frame::after {
-    border-color: rgba(212, 165, 116, 0.6);
-}
-
-.rsvp-section .decorative-frame::before {
-    box-shadow:
-        inset 0 0 0 1px rgba(212, 165, 116, 0.65),
-        inset 0 0 0 8px transparent,
-        inset 0 0 0 9px rgba(212, 165, 116, 0.4),
-        inset 0 0 0 16px transparent,
-        inset 0 0 0 17px rgba(212, 165, 116, 0.32);
-}
-
-
 /* ===== Date Section ===== */
 .date-section {
-    background-color: var(--color-warm-white);
     overflow: hidden;
 }
 
-.date-display {
+.date-section .container {
+    width: min(100%, 900px);
+}
+
+.date-section .reveal {
+    text-align: center;
+}
+
+.date-section .photo-image {
+    margin-top: 40px;
+}
+
+.event-schedule {
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 12px;
-    margin: 30px 0;
-    flex-wrap: nowrap;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 28px auto 10px;
+    width: min(100%, 720px);
 }
 
-.date-item {
-    text-align: center;
-    padding: 15px;
-}
-
-.date-number {
-    display: block;
-    font-family: var(--font-serif);
-    font-size: 4rem;
-    font-size: clamp(2.4rem, 9vw, 6rem);
-    font-weight: 300;
+.schedule-part {
+    font-family: var(--font-display);
+    font-size: clamp(1.45rem, 4.8vw, 2.25rem);
+    font-weight: 400;
     color: var(--color-deep-brown);
-    line-height: 1;
+    letter-spacing: 0.3px;
+    line-height: 1.3;
+    font-variant-numeric: lining-nums tabular-nums;
 }
 
-.date-label {
-    display: block;
-    font-family: var(--font-sans);
-    font-size: 0.7rem;
-    font-weight: 500;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: var(--color-text-light);
-    margin-top: 10px;
-}
-
-.date-divider {
-    width: 1px;
-    height: 60px;
-    background-color: var(--color-blush);
-}
-
-.date-text {
-    font-family: var(--font-serif);
-    font-size: 1.25rem;
-    font-style: italic;
+.schedule-separator {
     color: var(--color-dusty-rose);
-    text-align: center;
+    font-size: 0.9rem;
+    font-size: clamp(1.35rem, 4vw, 1.95rem);
+    opacity: 0.7;
 }
+
+.event-title {
+    font-family: var(--font-serif);
+    font-size: clamp(2rem, 6vw, 3rem);
+    font-weight: 400;
+    line-height: 1.1;
+    letter-spacing: 0.5px;
+    color: var(--color-deep-brown);
+    text-align: center;
+    margin-bottom: 12px;
+}
+
+.event-intro {
+    font-family: var(--font-sans);
+    font-size: 0.98rem;
+    font-weight: 300;
+    color: var(--color-text-light);
+    line-height: 1.8;
+    max-width: 520px;
+    margin: 0 auto 18px;
+}
+
 
 
 /* ===== Location Section ===== */
 .location-section {
-    background-color: var(--color-cream);
     text-align: center;
 }
 
@@ -412,8 +400,6 @@ body {
 
 .location-image {
     width: 100%;
-    height: 320px;
-    height: clamp(260px, 35vw, 360px);
     object-fit: cover;
     display: block;
     border-radius: 4px;
@@ -443,11 +429,28 @@ body {
     overflow: hidden;
 }
 
-.map-section iframe {
-    display: block;
+.map-section .container {
+    text-align: center;
+}
+
+.map-section .location-description {
+    margin: 0 auto;
+    text-align: center;
+}
+
+.map-section .location-image-container {
     width: min(100%, 1000px);
     max-width: 100%;
-    height: clamp(280px, 56vw, 450px);
+    padding: 0 clamp(12px, 4vw, 30px);
+    margin-top: 12px;
+}
+
+.map-embed {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    aspect-ratio: 4 / 3;
+    height: auto;
     border: 0;
 }
 
@@ -501,7 +504,6 @@ body {
 
 /* ===== RSVP Section ===== */
 .rsvp-section {
-    background: linear-gradient(135deg, var(--color-blush) 0%, var(--color-warm-white) 100%);
     text-align: center;
 }
 
@@ -618,10 +620,11 @@ body {
 
 /* ===== Footer ===== */
 .footer {
-    background-color: var(--color-deep-brown);
-    color: var(--color-cream);
+    background-color: #6c4f39;
+    color: #f3e6d6;
     text-align: center;
     padding: 35px 20px;
+    border-top: 1px solid rgba(244, 215, 182, 0.35);
 }
 
 .footer-names {
@@ -636,13 +639,17 @@ body {
     font-size: 0.8rem;
     font-weight: 300;
     letter-spacing: 3px;
-    color: var(--color-blush);
+    color: #e8d6c1;
     margin-bottom: 12px;
 }
 
 .footer-hearts {
-    font-size: 1.25rem;
-    color: var(--color-dusty-rose);
+    font-family: var(--font-serif);
+    font-size: 1.5rem;
+    letter-spacing: 0.04em;
+    line-height: 1;
+    color: #f0caa2;
+    text-shadow: 0 0 10px rgba(240, 202, 162, 0.25);
     animation: pulse 2s infinite;
 }
 
@@ -665,12 +672,8 @@ body {
         margin: 0 20px;
     }
 
-    .date-display {
-        gap: 40px;
-    }
-
-    .date-divider {
-        height: 80px;
+    .event-schedule {
+        gap: 14px;
     }
 
     .story-gallery {
