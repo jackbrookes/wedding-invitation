@@ -7,7 +7,7 @@ from pathlib import Path
 
 from PIL import Image, ImageDraw, ImageFont, ImageOps
 from reportlab.lib.colors import black, white
-from reportlab.lib.pagesizes import A5, A6
+from reportlab.lib.pagesizes import A4, A5, A6
 from reportlab.lib.units import mm
 from reportlab.lib.utils import ImageReader
 from reportlab.pdfbase import pdfmetrics
@@ -20,6 +20,8 @@ OUTPUT = ROOT / "output" / "pdf" / "wedding-menu-a5.pdf"
 OUTPUT_BW = ROOT / "output" / "pdf" / "wedding-menu-a5-black-white.pdf"
 OUTPUT_A6 = ROOT / "output" / "pdf" / "wedding-menu-a6.pdf"
 OUTPUT_A6_BW = ROOT / "output" / "pdf" / "wedding-menu-a6-black-white.pdf"
+OUTPUT_A6_4UP = ROOT / "output" / "pdf" / "wedding-menu-a6-4up-a4.pdf"
+OUTPUT_A6_4UP_BW = ROOT / "output" / "pdf" / "wedding-menu-a6-4up-a4-black-white.pdf"
 ORANIENBAUM = ROOT / "assets" / "Oranienbaum-Regular.ttf"
 SCRIPT_FONT = ROOT / "MsClaudy-Regular.otf"
 TOP_FLORAL = ROOT / "assets" / "floral-frame-top-ivory.png"
@@ -99,6 +101,20 @@ def draw_arch_frame(c: Canvas, inset: float, line_width: float, compact: bool = 
     c.drawPath(p, stroke=1, fill=0)
 
 
+def draw_cut_guides(c: Canvas, page_width: float, page_height: float, black_and_white: bool) -> None:
+    """Draw short, subtle L-shaped guides at each trim corner."""
+    guide_length = 2.2 * mm
+    c.saveState()
+    c.setStrokeColor(black if black_and_white else white)
+    c.setLineWidth(0.3)
+    c.setStrokeAlpha(0.62)
+    for x, x_direction in ((0, 1), (page_width, -1)):
+        for y, y_direction in ((0, 1), (page_height, -1)):
+            c.line(x, y, x + x_direction * guide_length, y)
+            c.line(x, y, x, y + y_direction * guide_length)
+    c.restoreState()
+
+
 def draw_flourish(c: Canvas, colour: tuple[int, int, int], compact: bool = False) -> None:
     top = monochrome_asset(str(TOP_FLORAL), colour)
     top_w = (28 * mm if compact else 35 * mm)
@@ -146,21 +162,10 @@ def draw_section(
     return y
 
 
-def build_pdf(
-    output: Path = OUTPUT,
-    black_and_white: bool = False,
-    page_size=A5,
-    compact: bool = False,
-) -> None:
+def draw_menu_page(c: Canvas, black_and_white: bool, page_size, compact: bool) -> None:
+    """Draw one menu page at the current canvas origin."""
     global PAGE_W, PAGE_H
     PAGE_W, PAGE_H = page_size
-    OUTPUT.parent.mkdir(parents=True, exist_ok=True)
-    register_fonts()
-
-    c = Canvas(str(output), pagesize=page_size, pageCompression=1)
-    c.setTitle("Wedding Menu - Jack and Tlhompho")
-    c.setAuthor("Jack and Tlhompho")
-    c.setSubject("A5 wedding menu")
 
     colour = (0, 0, 0) if black_and_white else (255, 255, 255)
     if black_and_white:
@@ -199,6 +204,53 @@ def build_pdf(
         c.drawCentredString(PAGE_W / 2, y - 3.1 * mm, "Soup")
 
     draw_spaced_centred(c, "J & T", 6.2 * mm if compact else 15.5 * mm, 7.4 if compact else 7.6, 1.5)
+
+
+def build_pdf(
+    output: Path = OUTPUT,
+    black_and_white: bool = False,
+    page_size=A5,
+    compact: bool = False,
+) -> None:
+    OUTPUT.parent.mkdir(parents=True, exist_ok=True)
+    register_fonts()
+
+    c = Canvas(str(output), pagesize=page_size, pageCompression=1)
+    c.setTitle("Wedding Menu - Jack and Tlhompho")
+    c.setAuthor("Jack and Tlhompho")
+    c.setSubject("A5 wedding menu")
+    draw_menu_page(c, black_and_white, page_size, compact)
+    c.showPage()
+    c.save()
+
+
+def build_4up_pdf(output: Path, black_and_white: bool = False) -> None:
+    """Create a single A4 sheet containing four correctly sized A6 menus."""
+    global PAGE_W, PAGE_H
+    OUTPUT.parent.mkdir(parents=True, exist_ok=True)
+    register_fonts()
+
+    tile_w, tile_h = A6
+    sheet_w, sheet_h = A4
+    x_margin = (sheet_w - 2 * tile_w) / 2
+    y_margin = (sheet_h - 2 * tile_h) / 2
+
+    c = Canvas(str(output), pagesize=A4, pageCompression=1)
+    c.setTitle("Wedding Menu - A6 4-up on A4")
+    c.setAuthor("Jack and Tlhompho")
+    c.setSubject("Four A6 wedding menus on one A4 sheet")
+    c.setFillColor(white)
+    c.rect(0, 0, sheet_w, sheet_h, stroke=0, fill=1)
+
+    for x in (x_margin, x_margin + tile_w):
+        for y in (y_margin, y_margin + tile_h):
+            c.saveState()
+            c.translate(x, y)
+            draw_menu_page(c, black_and_white, A6, compact=True)
+            draw_cut_guides(c, tile_w, tile_h, black_and_white)
+            c.restoreState()
+
+    PAGE_W, PAGE_H = A6
     c.showPage()
     c.save()
 
@@ -208,7 +260,11 @@ if __name__ == "__main__":
     build_pdf(OUTPUT_BW, black_and_white=True)
     build_pdf(OUTPUT_A6, page_size=A6, compact=True)
     build_pdf(OUTPUT_A6_BW, black_and_white=True, page_size=A6, compact=True)
+    build_4up_pdf(OUTPUT_A6_4UP)
+    build_4up_pdf(OUTPUT_A6_4UP_BW, black_and_white=True)
     print(f"Created {OUTPUT}")
     print(f"Created {OUTPUT_BW}")
     print(f"Created {OUTPUT_A6}")
     print(f"Created {OUTPUT_A6_BW}")
+    print(f"Created {OUTPUT_A6_4UP}")
+    print(f"Created {OUTPUT_A6_4UP_BW}")
